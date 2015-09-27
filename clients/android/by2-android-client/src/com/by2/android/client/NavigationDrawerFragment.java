@@ -1,8 +1,5 @@
 package com.by2.android.client;
 
-
-import com.example.leavingin.R;
-
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;

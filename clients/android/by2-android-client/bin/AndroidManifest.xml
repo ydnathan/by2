@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.leavingin"
+    package="com.by2.android.client"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -17,10 +17,10 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <permission
-        android:name="com.example.leavingin.permission.C2D_MESSAGE"
+        android:name="com.by2.android.client.permission.C2D_MESSAGE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.leavingin.permission.C2D_MESSAGE" />
+    <uses-permission android:name="com.by2.android.client.permission.C2D_MESSAGE" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />    
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -57,7 +57,7 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
                 <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
 
-                <category android:name="com.example.leavingin" />
+                <category android:name="com.by2.android.client" />
             </intent-filter>
         </receiver>
         

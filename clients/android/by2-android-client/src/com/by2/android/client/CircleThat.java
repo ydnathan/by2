@@ -2,9 +2,6 @@ package com.by2.android.client;
 
 import java.util.Arrays;
 import java.util.List;
-
-import com.example.leavingin.R;
-
 import android.view.View;
 import android.view.View.OnClickListener;
 

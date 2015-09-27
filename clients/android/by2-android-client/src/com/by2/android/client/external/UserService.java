@@ -20,8 +20,8 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.by2.android.client.R;
 import com.by2.android.client.constants.Constants;
-import com.example.leavingin.R;
 
 public class UserService {
 

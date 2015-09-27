@@ -51,7 +51,6 @@ import com.by2.android.client.constants.Constants;
 import com.by2.android.client.external.UserService;
 import com.by2.android.client.helpers.SharedPreferencesDB;
 import com.by2.android.client.utilities.Utility;
-import com.example.leavingin.R;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;

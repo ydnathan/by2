@@ -1,7 +1,5 @@
 package com.by2.android.client;
 
-import com.example.leavingin.R;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
