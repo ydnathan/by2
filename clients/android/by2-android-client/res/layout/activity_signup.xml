@@ -1,0 +1,246 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp"
+        android:orientation="vertical"
+        android:padding="10dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="6dp"
+            android:text="A FEW DETAILS"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/base_details_block"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="7" >
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="2" >
+
+                <com.by2.android.client.RoundedImageView
+                    android:id="@+id/profile_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:alpha="0.5"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/m" />
+
+                <TextView
+                    android:id="@+id/upload_selfie_msg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Upload your selfie" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/profile_details_block"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="Name" />
+
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:text="Company" />
+
+                <Spinner
+                    android:id="@+id/availableOffices"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkedButton="@+id/male"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="M" />
+
+            <RadioButton
+                android:id="@+id/female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="F" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/companyLocationDropdownText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/base_details_block"
+            android:text="Company Location" />
+
+        <Spinner
+            android:id="@+id/companyLocationDropdown"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/companyLocationDropdownText" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/companyLocationDropdown"
+            android:text="Email" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/textView3"
+            android:orientation="horizontal" >
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:gravity="right" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="\@flipkart.com"
+                android:textSize="16dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/availableOffices"
+            android:text="Phone Number" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView3"
+            android:orientation="horizontal"
+            android:weightSum="2" >
+
+            <EditText
+                android:id="@+id/phoneNumber"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/signup"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:background="@drawable/blue_button"
+                android:paddingBottom="2dip"
+                android:paddingTop="2dip"
+                android:text="sign up"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
+        <View
+            android:id="@+id/SplitLine_hor1"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/verify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/SplitLine_hor1"
+            android:layout_marginBottom="6dp"
+            android:layout_marginTop="6dp"
+            android:text="VERIFICATION"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/verification_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/verify"
+            android:paddingBottom="4dp"
+            android:text="Enter the secret code that has been sent to your corporate email account" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/verification_message"
+            android:orientation="horizontal"
+            android:weightSum="2" >
+
+            <EditText
+                android:id="@+id/secretCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_weight="1"
+                android:ems="10"
+                android:inputType="number" />
+
+            <Button
+                android:id="@+id/verify_button"
+                android:layout_width="0dp"
+                android:layout_height="36dp"
+                android:layout_weight="1"
+                android:background="@drawable/blue_button"
+                android:paddingBottom="2dip"
+                android:paddingTop="2dip"
+                android:text="verify"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

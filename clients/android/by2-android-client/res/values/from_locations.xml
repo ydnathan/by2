@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="from_locations">
+        <item>Ashford, Koramangala</item>
+        <item>Mantri, Bellandur</item>
+        <item>OMTP, Kudlu Gate</item>               
+        <item>Salarpuria, Sony World</item>
+        <item>Vaishnavi Summit, Koramangala</item>        
+    </string-array>
+</resources>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="to_locations">
+        <item>AECS Layout</item>
+        <item>Airport Area</item>
+        <item>Airport Road</item>
+        <item>Akshaya Nagar</item>
+        <item>Anekal</item>
+        <item>Anjanapura</item>
+        <item>Attibele</item>
+        <item>Bagalur</item>
+        <item>Banashankari</item>
+        <item>Banaswadi</item>
+        <item>Bangalore Central, Bellandur</item>
+        <item>Bannerghatta Road</item>
+        <item>Basavanagar</item>
+        <item>Basavanagudi</item>
+        <item>Basaveshwaranagar</item>
+        <item>Begur Road</item>
+        <item>Belandur</item>
+        <item>Bellary Road</item>
+        <item>Benson Town</item>
+        <item>Bilekahalli</item>
+        <item>Bommanahalli</item>
+        <item>Bommasandra</item>
+        <item>Brooke Field</item>
+        <item>BTM Layout</item>
+        <item>C V Raman Nagar</item>
+        <item>Central Silk Board</item>
+        <item>Chamarajpet</item>
+        <item>Chambal River</item>
+        <item>Chandapur</item>
+        <item>Chikkaballapur</item>
+        <item>Chikkajala</item>
+        <item>Cookes Town</item>
+        <item>Cox Town</item>
+        <item>Defence Colony</item>
+        <item>Devanahalli</item>
+        <item>Dodballapur Road</item>
+        <item>Doddaballapur</item>
+        <item>Doddaballapur Road</item>
+        <item>Dollars Colony</item>
+        <item>Domlur</item>
+        <item>Electronic City</item>
+        <item>Fraser Town</item>
+        <item>G M Palya</item>
+        <item>Ganganagar</item>
+        <item>Gottigere</item>
+        <item>Hanumanth Nagar</item>
+        <item>HBR Layout</item>
+        <item>Hebbal</item>
+        <item>Hebbal Kempapura</item>
+        <item>Hegde Nagar</item>
+        <item>Hennur</item>
+        <item>Hennur Road</item>
+        <item>Hesaraghatta Main Road</item>
+        <item>HMT Layout</item>
+        <item>Hoodi Circle</item>
+        <item>Hoodi Village</item>
+        <item>Horamavu</item>
+        <item>Hoskote</item>
+        <item>Hoskote</item>
+        <item>Hosur Road</item>
+        <item>HRBR Layout</item>
+        <item>HSR Layout</item>
+        <item>HSR layout, Devi Eye Hospital</item>
+        <item>Hulimavu</item>
+        <item>Huskur</item>
+        <item>Indira Nagar</item>
+        <item>Indraprastha</item>
+        <item>Innovative multiplex</item>
+        <item>ISRO Layout</item>
+        <item>ITPL</item>
+        <item>Jakkur</item>
+        <item>Jalahalli</item>
+        <item>Jayanagar</item>
+        <item>Jeevan Bima Nagar</item>
+        <item>Jigani Industrial Area</item>
+        <item>JP Nagar</item>
+        <item>JP nagar, 3rd phase</item>
+        <item>JP nagar, 4th phase</item>
+        <item>JP nagar, 6th phase</item>
+        <item>Kaggadaspura</item>
+        <item>Kalyan Nagar</item>
+        <item>Kanaka Nagar</item>
+        <item>Kanakapura Road</item>
+        <item>Kasturi Nagar</item>
+        <item>Kengeri</item>
+        <item>Kodigehalli</item>
+        <item>Koramangala</item>
+        <item>KR Puram</item>
+        <item>KR Puram junction</item>
+        <item>Kudlu Gate</item>
+        <item>Kumaraswamy Layout</item>
+        <item>Kundalahalli</item>
+        <item>Lavelle Road</item>
+        <item>Madiwala</item>
+        <item>Magadi Road</item>
+        <item>Mahadevapura</item>
+        <item>Majestic</item>
+        <item>Mallesh Palaya</item>
+        <item>Malleshwaram</item>
+        <item>Manek Chowk</item>
+        <item>Marathahalli</item>
+        <item>Mathikere</item>
+        <item>MG Road</item>
+        <item>Millers Road</item>
+        <item>Mysore Road</item>
+        <item>Naganathapura</item>
+        <item>Nagarbhavi</item>
+        <item>Nagawara</item>
+        <item>Nagwar</item>
+        <item>Nandi Hills</item>
+        <item>NelaMangala</item>
+        <item>Old Airport Road</item>
+        <item>Old Madras Road</item>
+        <item>OMBR Layout</item>
+        <item>Outer Ring Road</item>
+        <item>Padmanabhanagar</item>
+        <item>Pai Layout</item>
+        <item>Palace Road</item>
+        <item>Peenya</item>
+        <item>Prashanth Nagar</item>
+        <item>Raj Bhavan</item>
+        <item>Rajajinagar</item>
+        <item>Rajanukunte</item>
+        <item>Rajarajeshwari Nagar</item>
+        <item>Ramamurthy Nagar</item>
+        <item>RBI Layout</item>
+        <item>Rest House Road</item>
+        <item>Richards Town</item>
+        <item>Richmond Road</item>
+        <item>RMV Extension Stage</item>
+        <item>RT Nagar</item>
+        <item>Sadaramangala</item>
+        <item>Sahakar Nagar</item>
+        <item>Sanjay Nagar</item>
+        <item>Sarjapur</item>
+        <item>Sarjapur Road</item>
+        <item>Shanti Nagar</item>
+        <item>Silk Board</item>
+        <item>Silkboard</item>
+        <item>Sun City, Sarjapur road</item>
+        <item>Thanisandra</item>
+        <item>Thippasandra</item>
+        <item>Thyagaraj Nagar</item>
+        <item>Tippasandra</item>
+        <item>Tumkur Road</item>
+        <item>Ulsoor</item>
+        <item>Uttarahalli</item>
+        <item>Vasanth Nagar</item>
+        <item>Vidyanagar</item>
+        <item>Vidyaranyapura</item>
+        <item>Vigyan Nagar</item>
+        <item>Vijaya Bank Layout</item>
+        <item>Vijayanagar</item>
+        <item>Whitefield</item>
+        <item>Wilson Garden</item>
+        <item>Yelahanka</item>
+        <item>Yeshwantpur</item>
+    </string-array>
+
+</resources>
