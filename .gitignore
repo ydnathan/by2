@@ -1,2 +1,4 @@
 .DS_Store
 clients/android/by2-android-client/bin
+server/buzkashi/target
+server/buzkashi/.idea
