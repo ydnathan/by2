@@ -8,6 +8,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Set;
 
 /**
@@ -73,6 +75,33 @@ public class CompanyOffice {
         this.addressLatLon = addressLatLon;
         this.city = city;
         this.state = state;
+        this.createdAt = new Timestamp(Calendar.getInstance().getTime().getTime());
+        this.updatedAt = new Timestamp(Calendar.getInstance().getTime().getTime());
+    }
+
+    @Column(name="created_at")
+    @JsonProperty("created_at")
+    private Timestamp createdAt;
+
+    @Column(name="updated_at")
+    @JsonProperty("updated_at")
+    private Timestamp updatedAt;
+
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public long getId() {

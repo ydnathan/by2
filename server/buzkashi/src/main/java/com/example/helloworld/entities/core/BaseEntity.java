@@ -9,6 +9,8 @@ import java.util.Calendar;
 /**
  * Created by vaidyanathan.s on 17/10/15.
  */
+
+
 public class BaseEntity {
     public BaseEntity() {
         this.requestCreatedAt = new Timestamp(Calendar.getInstance().getTime().getTime());

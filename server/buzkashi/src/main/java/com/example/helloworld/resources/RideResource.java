@@ -98,42 +98,6 @@ public class RideResource {
         return searchRidesResponses;
     }
 
-//    @POST
-//    @Timed
-//    @Path("request")
-//    @UnitOfWork
-//    public RequestRideResponse requestRide(@FormParam("ride_taker_user_id") Optional<Long> rideTakerUserId, @FormParam("ride_giver_user_id") Optional<Long> rideGiverUserId, @FormParam("ride_id") Optional<Long> rideId, @FormParam("destination_id") Optional<Long> destinationId) {
-//        User rideGiver = userDAO.findById(rideGiverUserId.get());
-//        User rideTaker = userDAO.findById(rideTakerUserId.get());
-//        Ride ride = rideDAO.findById(rideId.get());
-//        Destination destination = destinationDAO.findById(destinationId.get());
-//        if(rideGiver == null || rideTaker == null || ride == null || destination == null) {
-//            return new RequestRideResponse();
-//        }
-//
-//        List<Request> existingRequests = requestDAO.searchRequests(destination, ride, rideTaker);
-//        if(existingRequests!=null && existingRequests.size() > 0) {
-//            logger.debug("[WARN] already existing request found for the same ride/destination by same user, returning the same");
-//            return new RequestRideResponse(existingRequests.get(0));
-//        }
-//
-//        Request request = requestDAO.create(new Request(ride, rideTaker, destination));
-//        return new RequestRideResponse(request);
-//    }
-
-    /*
-     * [POST] Approve a ride-seeker
-	REQUEST
-	user_id
-	[user_ids] (ride seekers)
-	no_more
-	RESPONSE
-	user_id
-	user_name
-	profile_image_url
-	contact_number
-**/
-
     @POST
     @Timed
     @Path("approveRideSeekers")
@@ -148,56 +112,11 @@ public class RideResource {
         List<Request> approvedList = new ArrayList<Request>();
         for(Request request : requestList){
         	if(request.getStatus() != RequestStatus.REJECTED_LEFT_ALREADY){
-	        	request.setRequestUpdatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
+	        	request.setUpdatedAt(new Timestamp(Calendar.getInstance().getTime().getTime()));
 	        	request.setStatus(RequestStatus.ACCEPTED);
 	        	approvedList.add(requestDAO.save(request));
         	}
         }
         return approvedList;
     }
-   
-    
-//    @POST
-//    @Timed
-//    @Path("createPublishedRide")
-//    @UnitOfWork
-//    public PublishedRide createPublishedRide(@FormParam("user_id") Optional<Long> userId, @FormParam("company_office_id") Optional<Long> companyOfficeId,
-//    		@FormParam("destination_ids") Optional<String> destinationIdStr,@QueryParam("leaving_at") Optional<String> leavingAt) {
-//    	User createdBy = userDAO.findById(userId.get());
-//        Route route = createRoute(createdBy, companyOfficeId, destinationIdStr);
-//        CompanyOffice companyOffice = companyOfficeDAO.findById(companyOfficeId.get());
-//        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-//        Date leavingByDate = Calendar.getInstance().getTime();
-//        try {
-//            leavingByDate = format.parse(leavingAt.get());
-//        } catch (ParseException e) {
-//            e.printStackTrace();
-//        }
-//
-//        return publishedRideDAO.create(new PublishedRide(createdBy, route, leavingByDate, companyOffice));
-//    }
-
-//	private Route createRoute(User createdBy, Optional<Long> companyOfficeId,
-//			Optional<String> destinationIdStr) {
-//        CompanyOffice companyOffice = companyOfficeDAO.findById(companyOfficeId.get());
-//        String companyAddressCode = companyOffice.getAddressCode();
-//        String[] destinationIds = destinationIdStr.get().split("\\s*,\\s*");
-//        List<Long> destinationIdList = new ArrayList<Long>();
-//        for(String destinationId : destinationIds) {
-//            destinationIdList.add(Long.parseLong(destinationId));
-//        }
-//        List<Destination> destinationList = destinationDAO.findById(destinationIdList);
-//        String routeName = companyAddressCode.concat("_").concat(Iterables.getLast(destinationList).getAreaCode());
-//        Route route = routeDAO.create(new Route(routeName, createdBy));
-//
-//        int sequence = 0;
-//        for(Destination destination : destinationList) {
-//            routeDestinationMapDAO.create(new RouteDestinationMap(route, destination, sequence));
-//            sequence++;
-//        }
-//
-//        return route;
-//	}
-
-    
 }

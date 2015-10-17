@@ -18,7 +18,7 @@ import java.util.List;
 
 @Entity
 @Table(name="Request")
-public class Request extends BaseEntity {
+public class Request {
     public Request() {
         // Jackson deserialization
     }
@@ -62,6 +62,33 @@ public class Request extends BaseEntity {
         this.source = companyOffice;
         this.destination = destination;
         this.status = RequestStatus.REQUESTED;
+        this.createdAt = new Timestamp(Calendar.getInstance().getTime().getTime());
+        this.updatedAt = new Timestamp(Calendar.getInstance().getTime().getTime());
+    }
+
+    @Column(name="created_at")
+    @JsonProperty("created_at")
+    private Timestamp createdAt;
+
+    @Column(name="updated_at")
+    @JsonProperty("updated_at")
+    private Timestamp updatedAt;
+
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public long getId() {

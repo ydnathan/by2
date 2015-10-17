@@ -76,8 +76,7 @@ public class MainActivity extends Activity implements
 		FragmentManager fragmentManager = getFragmentManager();
 		switch (position + 1) {
 		case 1:
-			fragmentManager
-					.beginTransaction()
+			fragmentManager.beginTransaction()
 					.replace(R.id.container, AskForARideFragment.newInstance(1))
 					.commit();
 			break;
@@ -92,8 +91,7 @@ public class MainActivity extends Activity implements
 					.commit();
 			break;
 		case 4:
-			fragmentManager
-					.beginTransaction()
+			fragmentManager.beginTransaction()
 					.replace(R.id.container, AllRequestsFragment.newInstance(4))
 					.commit();
 			break;
@@ -104,9 +102,27 @@ public class MainActivity extends Activity implements
 		case 6:
 			Toast.makeText(this, "coming soon", Toast.LENGTH_LONG).show();
 			break;
+			
+		case 7:
+			logout();
+			break;
 		}
 
 	}
+
+	private void logout() {
+		SharedPreferencesDB db = new SharedPreferencesDB(this);
+		db.delete("verificationCode");
+		db.delete("userID");
+		db.delete("verified");
+		db.delete("regId");
+		
+		Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+		MainActivity.this.startActivity(intent);
+		this.finish();
+	}
+
+
 
 	public void onSectionAttached(int number) {
 		switch (number) {

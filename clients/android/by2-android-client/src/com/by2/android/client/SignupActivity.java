@@ -158,8 +158,7 @@ public class SignupActivity extends Activity {
 		
 		signup.setOnClickListener(new View.OnClickListener() {			
 			@Override
-			public void onClick(View v) {
-				
+			public void onClick(View v) {				
 				db.set(Constants.USER_NAME, name.getText().toString());
 				showProgressBar();
 				registerUser();
@@ -198,7 +197,9 @@ public class SignupActivity extends Activity {
 				if(secretCode.getText().toString().equals(db.get(KEY_VERIFICATION_CODE))) {
 					db.set(KEY_VERIFIED, VERIFIED);
 					openApp(intent);
-				}								
+				} else {
+					Toast.makeText(SignupActivity.this, "Uh Oh ! That's not right !", Toast.LENGTH_LONG).show();
+				}
 			}
 		});
 		

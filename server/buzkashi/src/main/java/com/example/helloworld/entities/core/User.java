@@ -8,6 +8,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Set;
 
 /**
@@ -15,7 +17,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name="User")
-public class User extends BaseEntity {
+public class User {
     public User() {
         // Jackson deserialization
     }
@@ -100,6 +102,33 @@ public class User extends BaseEntity {
         this.verified = VerificationStatus.UNVERIFIED;
         this.emailToken = "";
         this.companyOffice = companyOffice;
+        this.createdAt = new Timestamp(Calendar.getInstance().getTime().getTime());
+        this.updatedAt = new Timestamp(Calendar.getInstance().getTime().getTime());
+    }
+
+    @Column(name="created_at")
+    @JsonProperty("created_at")
+    private Timestamp createdAt;
+
+    @Column(name="updated_at")
+    @JsonProperty("updated_at")
+    private Timestamp updatedAt;
+
+
+    public Timestamp getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Timestamp createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Timestamp getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Timestamp updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public long getId() {

@@ -22,4 +22,9 @@ public class SharedPreferencesDB {
 		editor.putString(key, value);
 		return editor.commit();
 	}
+	
+	public boolean delete(String key) {		
+		editor.remove(key);
+		return editor.commit();
+	}
 }
