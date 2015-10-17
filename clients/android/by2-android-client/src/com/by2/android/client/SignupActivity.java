@@ -1,29 +1,22 @@
 package com.by2.android.client;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntity;
+import org.apache.http.entity.mime.content.FileBody;
+import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HTTP;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,12 +25,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -56,8 +50,6 @@ import com.by2.android.client.external.LocationService;
 import com.by2.android.client.external.UserService;
 import com.by2.android.client.helpers.SharedPreferencesDB;
 import com.by2.android.client.utilities.Utility;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -107,6 +99,7 @@ public class SignupActivity extends Activity {
     private Map<String, String> companyOfficeToIdLocationMap;
     private List<String> companies;
     private List<String> companyOffices;
+    private File profilePicImage;
     
     AsyncTask<Void, Void, String> createRegIdTask;
     
@@ -329,7 +322,18 @@ public class SignupActivity extends Activity {
 		new AsyncTask<Void, Void, JSONObject>() {								
             @Override
             protected JSONObject doInBackground(Void... params) {
-            	return userService.addUser(selectedCompanyOffice, selectedGender, phoneNumber.getText().toString(), name.getText().toString(), email.getText().toString() + companyDomain.getText(), UNVERIFIED);            	
+            	JSONObject result;            	            
+            	result = userService.addUser(selectedCompanyOffice, selectedGender, phoneNumber.getText().toString(), name.getText().toString(), email.getText().toString() + companyDomain.getText(), UNVERIFIED);
+            	if(profilePicImage !=null && result != null && result.has(KEY_USER_ID)) {
+            		boolean imageUploadResult = false;
+					try {
+						imageUploadResult = uploadPhoto(profilePicImage, result.getString(KEY_USER_ID));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+            		System.out.println("Image upload : " + imageUploadResult);
+            	}
+            	return result;
             }
  
             @Override
@@ -340,13 +344,14 @@ public class SignupActivity extends Activity {
 				try {					
 					verificationCode = msgJSON.getString(KEY_VERIFICATION_CODE);
 					userId = msgJSON.getString(KEY_USER_ID);
+					
+	                // Store the verification id in order to validate from corp email.				
+					db.set(KEY_VERIFICATION_CODE, verificationCode);                
+	                db.set(KEY_USER_ID, userId);
+	                
 				} catch (JSONException e) {
 					e.printStackTrace();
-				}
-            	            	
-                // Store the verification id in order to validate from corp email.				
-				db.set(KEY_VERIFICATION_CODE, verificationCode);                
-                db.set(KEY_USER_ID, userId);
+				}            	            
 
                 if(verificationCode!=null && userId!= null) {
                 	Toast.makeText(applicationContext, getResources().getString(R.string.successfully_registered_msg), Toast.LENGTH_LONG).show();	
@@ -367,6 +372,7 @@ public class SignupActivity extends Activity {
 	            	byte[] fileBytes = null;
 	                if (intent != null) {
 	                    Uri selectedImage = intent.getData();
+	                    
 	                    fileBytes = Utility.GetFileBytes(this, selectedImage);
 	                    Bitmap bitmap = BitmapFactory.decodeByteArray(fileBytes, 0, fileBytes.length);
 	                    int nh = (int) ( bitmap.getHeight() * (512.0 / bitmap.getWidth()) );
@@ -374,6 +380,8 @@ public class SignupActivity extends Activity {
 	                    profilePic.setImageBitmap(scaled);
 	                    profilePic.setAlpha(1f);
 	                    uploadSelfieMsg.setVisibility(View.GONE);
+	                    String actualFilePath = getRealPathFromUri(this, selectedImage);
+	                    profilePicImage = new File(saveBitmapToFile(actualFilePath, scaled));
 	                } else {
 	                    fileBytes = null;
 	                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.image_load_error), Toast.LENGTH_SHORT).show();
@@ -385,6 +393,41 @@ public class SignupActivity extends Activity {
 	    }
 	}	
 
+	private static String saveBitmapToFile(String fileName, Bitmap bmp) {
+		File dir = new File(fileName);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}			
+		File file = new File(fileName+"_small");
+		FileOutputStream fOut;
+		try {
+			fOut = new FileOutputStream(file);
+			bmp.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+			fOut.flush();
+			fOut.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return fileName+"_small";
+	}
+	
+	private static String getRealPathFromUri(Context context, Uri contentUri) {
+	    Cursor cursor = null;
+	    try {
+	        String[] proj = { MediaStore.Images.Media.DATA };
+	        cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	        cursor.moveToFirst();
+	        return cursor.getString(column_index);
+	    } finally {
+	        if (cursor != null) {
+	            cursor.close();
+	        }
+	    }
+	}
+	
 	protected void showProgressBar() {		
         prgDialog.setMessage(getResources().getString(R.string.waiting_msg));
         prgDialog.setCancelable(false);
@@ -486,49 +529,23 @@ public class SignupActivity extends Activity {
 	protected boolean isVerifiedUser() {
 		return db.get(Constants.USER_NAME)!=null && db.get(KEY_VERIFIED)!=null;  
 	}
+
+	private boolean uploadPhoto(File image, String fileName) {
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost = new HttpPost(this.getResources().getString(R.string.server_base_url) + "/user/add_image");
+		try {
+			MultipartEntity entity = new MultipartEntity();
+			entity.addPart("file_name", new StringBody(fileName + ".png"));
+			entity.addPart("file", new FileBody(image));
+			httppost.setEntity(entity);
+			HttpResponse response = httpclient.execute(httppost);
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+			return false;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
 }
-
-
-
-
-
-
-//public void onClick(View v)
-//{
-//    if(fileBytes != null)
-//    {
-//        MultipartEntity entity = getEntity(fileBytes);
-//        PostData(entity);
-//    }
-//}
-//
-//private MultipartEntity getEntity(byte[] bytes)
-//{
-//    MultipartEntity entity = new MultipartEntity();
-//    InputStream in = new ByteArrayInputStream(bytes);
-//    ContentBody bin = new InputStreamBody(in, "Image_" + c.getTimeInMillis() + ".jpg");
-//    entity.addPart("image_query_string_variable_name", bin);
-//}
-//
-//private void PostData(MultipartEntity entity)
-//{
-//    HttpParams httpParameters = new BasicHttpParams();  
-//    HttpConnectionParams.setConnectionTimeout(httpParameters, 20000);
-//    HttpConnectionParams.setSoTimeout(httpParameters, 20000);
-//    DefaultHttpClient client = new DefaultHttpClient(httpParameters);
-//
-//    HttpPost request = new HttpPost("http://www.you_server_url.com/someFileName.php");
-//    request.setEntity(entity);
-//
-//    HttpResponse response = null;
-//    response = client.execute(request);
-//    BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
-//    StringBuffer result = new StringBuffer();
-//    String line = "";
-//    while ((line = rd.readLine()) != null) {
-//        result.append(line);
-//    }
-//    //
-//    // Process the returned result from server...
-//    //
-//}

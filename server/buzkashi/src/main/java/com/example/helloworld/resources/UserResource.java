@@ -13,9 +13,14 @@ import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyClientBuilder;
 import org.glassfish.jersey.client.JerseyWebTarget;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.*;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import java.io.*;
@@ -24,13 +29,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.Response;
 
@@ -79,6 +77,46 @@ public class UserResource {
         this.requestDAO = requestDAO;
     }
 
+
+    @POST
+    @Timed
+    @Path("add_image")
+    @UnitOfWork
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @Produces(MediaType.APPLICATION_JSON)
+    public ImageUploadResponse uploadFile(@FormDataParam("file") InputStream uploadedInputStream,
+                               @FormDataParam("file_name") String fileName) {
+        String uploadedFileLocation = "uploaded_images/" + fileName;
+
+        // TODO: Right now this image is being stored in the server under the above path, once the S3 issue is fixed, some_url will be replaced by that.
+
+        writeToFile(uploadedInputStream, uploadedFileLocation);
+        return new ImageUploadResponse("some_url");
+    }
+
+    // save uploaded file to new location
+    private void writeToFile(InputStream uploadedInputStream, String uploadedFileLocation) {
+        try {
+            File file = new File(uploadedFileLocation);
+            file.getParentFile().mkdirs();
+
+            OutputStream out = new FileOutputStream(file);
+            int read = 0;
+            byte[] bytes = new byte[1024];
+
+            out = new FileOutputStream(new File(uploadedFileLocation));
+            while ((read = uploadedInputStream.read(bytes)) != -1) {
+                out.write(bytes, 0, read);
+            }
+            out.flush();
+            out.close();
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+    }
+
+
     @POST
     @Timed
     @Path("add")
@@ -103,19 +141,6 @@ public class UserResource {
         System.out.println(emailToken + "  ,   " + userID.toString());
         return new AddUserResponse(emailToken, userID.toString());
     }
-
-    private void saveFile(InputStream uploadedInputStream, String uploadedFileLocation) throws IOException {
-        int read;
-        final int BUFFER_LENGTH = 1024;
-        final byte[] buffer = new byte[BUFFER_LENGTH];
-        OutputStream out = new FileOutputStream(new File(uploadedFileLocation));
-        while ((read = uploadedInputStream.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
-        }
-        out.flush();
-        out.close();
-    }
-
 
     private static String sendVerMail(String name, String email) {
         String randomString = generateRandomString();

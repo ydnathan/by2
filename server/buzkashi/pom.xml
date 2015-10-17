@@ -67,6 +67,14 @@
             <version>2.19</version>
         </dependency>
 
+        <!-- Image Upload -->
+
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-multipart</artifactId>
+            <version>2.19</version>
+        </dependency>
+
         <!-- end -->
 
         <dependency>

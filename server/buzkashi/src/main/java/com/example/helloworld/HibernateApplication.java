@@ -11,6 +11,7 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
 //import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.hibernate.SessionFactory;
 
 /**
@@ -50,6 +51,8 @@ public class HibernateApplication extends Application<HibernateConfiguration> {
         environment.jersey().register(new RequestResource(userDAO, companyOfficeDAO, destinationDAO, routeDAO,requestDAO));
         environment.jersey().register(new PersonResource(new PersonDAO(sessionFactory)));
         environment.jersey().register(new CompanyOfficeResource(companyOfficeDAO, companyDAO));
+
+        environment.jersey().register(MultiPartFeature.class);
     }
 
     @Override
