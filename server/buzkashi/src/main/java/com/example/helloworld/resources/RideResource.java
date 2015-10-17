@@ -1,5 +1,7 @@
 package com.example.helloworld.resources;
 
+import com.example.helloworld.dao.*;
+import com.example.helloworld.entities.core.*;
 import io.dropwizard.hibernate.UnitOfWork;
 import io.dropwizard.jersey.params.LongParam;
 
@@ -24,26 +26,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
-import com.example.helloworld.dao.CompanyDAO;
-import com.example.helloworld.dao.DestinationDAO;
-import com.example.helloworld.dao.PublishedRideDAO;
-import com.example.helloworld.dao.RequestDAO;
-import com.example.helloworld.dao.RideDAO;
-import com.example.helloworld.dao.RouteDAO;
-import com.example.helloworld.dao.RouteDestinationMapDAO;
-import com.example.helloworld.dao.UserDAO;
 import com.example.helloworld.entities.RequestRideResponse;
 import com.example.helloworld.entities.SearchRidesResponse;
-import com.example.helloworld.entities.core.Company;
-import com.example.helloworld.entities.core.Destination;
-import com.example.helloworld.entities.core.PublishedRide;
 import com.example.helloworld.entities.core.PublishedRide.RideStatus;
-import com.example.helloworld.entities.core.Request;
 import com.example.helloworld.entities.core.Request.RequestStatus;
-import com.example.helloworld.entities.core.Ride;
-import com.example.helloworld.entities.core.Route;
-import com.example.helloworld.entities.core.RouteDestinationMap;
-import com.example.helloworld.entities.core.User;
 import com.google.common.base.Optional;
 import com.google.common.collect.Iterables;
 
@@ -59,7 +45,7 @@ public class RideResource {
     private UserDAO userDAO;
     private RequestDAO requestDAO;
     private DestinationDAO destinationDAO;
-    private CompanyDAO companyDAO;
+    private CompanyOfficeDAO companyOfficeDAO;
     private RouteDAO routeDAO;
     private RouteDestinationMapDAO routeDestinationMapDAO;
     private PublishedRideDAO publishedRideDAO;
@@ -67,12 +53,12 @@ public class RideResource {
     final static Logger logger = LoggerFactory.getLogger(RideResource.class);
 
     public RideResource(RideDAO rideDAO, UserDAO userDAO, RequestDAO requestDAO, DestinationDAO destinationDAO, 
-    		CompanyDAO companyDAO, RouteDAO routeDAO, RouteDestinationMapDAO routeDestinationMapDAO,PublishedRideDAO publishedRideDAO) {
+    		CompanyOfficeDAO companyOfficeDAO, RouteDAO routeDAO, RouteDestinationMapDAO routeDestinationMapDAO,PublishedRideDAO publishedRideDAO) {
         this.rideDAO = rideDAO;
         this.userDAO = userDAO;
         this.requestDAO = requestDAO;
         this.destinationDAO = destinationDAO;
-        this.companyDAO = companyDAO;
+        this.companyOfficeDAO = companyOfficeDAO;
         this.routeDAO = routeDAO;
         this.routeDestinationMapDAO = routeDestinationMapDAO;
         this.publishedRideDAO = publishedRideDAO;
@@ -171,47 +157,47 @@ public class RideResource {
     }
    
     
-    @POST
-    @Timed
-    @Path("createPublishedRide")
-    @UnitOfWork
-    public PublishedRide createPublishedRide(@FormParam("user_id") Optional<Long> userId, @FormParam("company_id") Optional<Long> companyId, 
-    		@FormParam("destination_ids") Optional<String> destinationIdStr,@QueryParam("leaving_at") Optional<String> leavingAt) {
-    	User createdBy = userDAO.findById(userId.get());
-        Route route = createRoute(createdBy, companyId, destinationIdStr);
-        Company company = companyDAO.findById(companyId.get());
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        Date leavingByDate = Calendar.getInstance().getTime();
-        try {
-            leavingByDate = format.parse(leavingAt.get());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+//    @POST
+//    @Timed
+//    @Path("createPublishedRide")
+//    @UnitOfWork
+//    public PublishedRide createPublishedRide(@FormParam("user_id") Optional<Long> userId, @FormParam("company_office_id") Optional<Long> companyOfficeId,
+//    		@FormParam("destination_ids") Optional<String> destinationIdStr,@QueryParam("leaving_at") Optional<String> leavingAt) {
+//    	User createdBy = userDAO.findById(userId.get());
+//        Route route = createRoute(createdBy, companyOfficeId, destinationIdStr);
+//        CompanyOffice companyOffice = companyOfficeDAO.findById(companyOfficeId.get());
+//        DateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+//        Date leavingByDate = Calendar.getInstance().getTime();
+//        try {
+//            leavingByDate = format.parse(leavingAt.get());
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return publishedRideDAO.create(new PublishedRide(createdBy, route, leavingByDate, companyOffice));
+//    }
 
-        return publishedRideDAO.create(new PublishedRide(createdBy, route, leavingByDate, company));
-    }
-
-	private Route createRoute(User createdBy, Optional<Long> companyId,
-			Optional<String> destinationIdStr) {
-        Company company = companyDAO.findById(companyId.get());
-        String companyAddressCode = company.getAddressCode();
-        String[] destinationIds = destinationIdStr.get().split("\\s*,\\s*");
-        List<Long> destinationIdList = new ArrayList<Long>();
-        for(String destinationId : destinationIds) {
-            destinationIdList.add(Long.parseLong(destinationId));
-        }
-        List<Destination> destinationList = destinationDAO.findById(destinationIdList);
-        String routeName = companyAddressCode.concat("_").concat(Iterables.getLast(destinationList).getAreaCode());
-        Route route = routeDAO.create(new Route(routeName, createdBy));
-
-        int sequence = 0;
-        for(Destination destination : destinationList) {
-            routeDestinationMapDAO.create(new RouteDestinationMap(route, destination, sequence));
-            sequence++;
-        }
-
-        return route;
-	}
+//	private Route createRoute(User createdBy, Optional<Long> companyOfficeId,
+//			Optional<String> destinationIdStr) {
+//        CompanyOffice companyOffice = companyOfficeDAO.findById(companyOfficeId.get());
+//        String companyAddressCode = companyOffice.getAddressCode();
+//        String[] destinationIds = destinationIdStr.get().split("\\s*,\\s*");
+//        List<Long> destinationIdList = new ArrayList<Long>();
+//        for(String destinationId : destinationIds) {
+//            destinationIdList.add(Long.parseLong(destinationId));
+//        }
+//        List<Destination> destinationList = destinationDAO.findById(destinationIdList);
+//        String routeName = companyAddressCode.concat("_").concat(Iterables.getLast(destinationList).getAreaCode());
+//        Route route = routeDAO.create(new Route(routeName, createdBy));
+//
+//        int sequence = 0;
+//        for(Destination destination : destinationList) {
+//            routeDestinationMapDAO.create(new RouteDestinationMap(route, destination, sequence));
+//            sequence++;
+//        }
+//
+//        return route;
+//	}
 
     
 }

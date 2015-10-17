@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by vaidyanathan.s on 10/05/15.
  */
-@Path("/company")
+@Path("/companies")
 @Produces(MediaType.APPLICATION_JSON)
 public class CompanyResource {
     private CompanyDAO dao;
@@ -27,13 +27,8 @@ public class CompanyResource {
     @Path("add")
     @UnitOfWork
     public Long addCompany(@FormParam("company_name") Optional<String> companyName,
-                           @FormParam("address_code") Optional<String> addressCode,
-                           @FormParam("email_domain") Optional<String> emailDomain,
-                           @FormParam("address_text") Optional<String> addressText,
-                           @FormParam("address_lat_lon") Optional<String> addressLatLon,
-                           @FormParam("city") Optional<String> city,
-                           @FormParam("state") Optional<String> state) {
-        return dao.create(new Company(companyName.get(), addressCode.get(), emailDomain.get(), addressText.get(), addressLatLon.get(), city.get(), state.get()));
+                           @FormParam("email_domain") Optional<String> emailDomain) {
+        return dao.create(new Company(companyName.get(), emailDomain.get()));
     }
 
     @GET
@@ -55,7 +50,7 @@ public class CompanyResource {
     
     @GET
     @Timed
-    @Path("findCompaniesByCity")
+    @Path("search")
     @UnitOfWork
     public List<Company> findCompanyByCityCode(@QueryParam("city") String city) {
         return dao.findCompaniesByCityCode(city);

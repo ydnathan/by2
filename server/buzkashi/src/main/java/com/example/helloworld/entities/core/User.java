@@ -15,7 +15,7 @@ import java.util.Set;
  */
 @Entity
 @Table(name="User")
-public class User {
+public class User extends BaseEntity {
     public User() {
         // Jackson deserialization
     }
@@ -32,7 +32,7 @@ public class User {
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Company company;
+    private CompanyOffice companyOffice;
 
     @NotEmpty
     @Column(name="name")
@@ -84,14 +84,14 @@ public class User {
     private Set<Route> routes;
 
     @JsonCreator
-    public User(@JsonProperty("company") Company company,
+    public User(@JsonProperty("company") CompanyOffice companyOffice,
                 @JsonProperty("name") String name,
                 @JsonProperty("gender") String gender,
                 @JsonProperty("company_email") String companyEmail,
                 @JsonProperty("contact_number") String contactNumber,
                 @JsonProperty("profile_image_url") String profileImageURL
                 ) {
-        this.company = company;
+        super();
         this.name = name;
         this.gender = gender;
         this.companyEmail = companyEmail;
@@ -99,6 +99,7 @@ public class User {
         this.profileImageURL = profileImageURL;
         this.verified = VerificationStatus.UNVERIFIED;
         this.emailToken = "";
+        this.companyOffice = companyOffice;
     }
 
     public long getId() {
@@ -169,12 +170,12 @@ public class User {
         this.rides = rides;
     }
 
-    public Company getCompany() {
-        return company;
+    public CompanyOffice getCompanyOffice() {
+        return companyOffice;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setCompanyOffice(CompanyOffice companyOffice) {
+        this.companyOffice = companyOffice;
     }
 
     public String getEmailToken() {

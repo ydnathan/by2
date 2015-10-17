@@ -30,11 +30,6 @@ public class CompanyDAO extends AbstractDAO<Company> {
     public List<Company> findAll() {
         return currentSession().createCriteria(Company.class).list();
     }
-
-//    public List<Company> findUnique() {
-//        List<Company> companies = currentSession().createCriteria(Company.class).setProjection(Projections.projectionList().add(Projections.groupProperty("companyName"))).list();
-//        return companies;
-//    }
     
     public List<Company> findCompaniesByCityCode(String city) {
         return currentSession().createCriteria(Company.class).add(Restrictions.eq("city", city)).list();

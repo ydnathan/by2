@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -22,6 +24,7 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -37,6 +40,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +52,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.by2.android.client.constants.Constants;
+import com.by2.android.client.external.LocationService;
 import com.by2.android.client.external.UserService;
 import com.by2.android.client.helpers.SharedPreferencesDB;
 import com.by2.android.client.utilities.Utility;
@@ -63,8 +68,10 @@ public class SignupActivity extends Activity {
 	private ProgressDialog prgDialog;    
 	private ImageView profilePic;
 	private TextView uploadSelfieMsg;
+	private TextView companyDomain;
 	private EditText secretCode;
 	private Spinner availableOffices;
+	private Spinner companyLocationDropdown;
 	private EditText email;
 	private EditText name;
 	private EditText phoneNumber;
@@ -73,6 +80,7 @@ public class SignupActivity extends Activity {
 	private RadioGroup genderSelector;
 	private Button verifyButton;
 	private String selectedGender = MALE;
+	private String selectedCompanyOffice;
 	
 	private GoogleCloudMessaging gcmObj;
 	private Context applicationContext; 
@@ -83,6 +91,7 @@ public class SignupActivity extends Activity {
     private final static String KEY_VERIFIED = "verified";
     private final static String KEY_REG_ID = "regId";
     
+    
     private final static String MALE = "M";
     private final static String FEMALE = "F";
     private final static String UNVERIFIED = "0";
@@ -91,6 +100,13 @@ public class SignupActivity extends Activity {
     private SharedPreferencesDB db;
     
     private UserService userService;
+    private LocationService locationService;
+    private Map<String, String> companyToIdMap;
+    private Map<String, String> companyToDomainMap;
+    private Map<String, GpsLocation> companyOfficeToGPSLocationMap;
+    private Map<String, String> companyOfficeToIdLocationMap;
+    private List<String> companies;
+    private List<String> companyOffices;
     
     AsyncTask<Void, Void, String> createRegIdTask;
     
@@ -102,6 +118,7 @@ public class SignupActivity extends Activity {
 		params = new RequestParams();
 		db = new SharedPreferencesDB(this);
 		userService = new UserService(this);
+		locationService = new LocationService(this);
 		
 		setTitle(getResources().getText(R.string.sign_up_text));
 		
@@ -116,6 +133,8 @@ public class SignupActivity extends Activity {
 		// Initializing all the views
 		
 		availableOffices = (Spinner) findViewById(R.id.availableOffices);
+		companyLocationDropdown = (Spinner) findViewById(R.id.companyLocationDropdown);
+		companyDomain = (TextView) findViewById(R.id.company_domain);
 		email = (EditText) findViewById(R.id.email);
 		name = (EditText) findViewById(R.id.name);
 		phoneNumber = (EditText) findViewById(R.id.phoneNumber);		
@@ -128,12 +147,14 @@ public class SignupActivity extends Activity {
 		prgDialog = new ProgressDialog(this);
 		
 		// TODO: Populating the companies - should be done from Server call.
+		companyToIdMap = new HashMap<String, String>();
+		companyToDomainMap = new HashMap<String, String>();
+		companyOfficeToGPSLocationMap = new HashMap<String, GpsLocation>();
+		companyOfficeToIdLocationMap = new HashMap<String, String>();
+		companies = new ArrayList<String>();
+		companyOffices = new ArrayList<String>();
+		// TODO: Populate the second drop-down using the data from first dropdown.
 		
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.available_companies, android.R.layout.simple_spinner_item);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		availableOffices.setAdapter(adapter);		
-		
-		// TODO: Populate the second drop-down using the data from first dropdown. 
 		
 		signup.setOnClickListener(new View.OnClickListener() {			
 			@Override
@@ -179,7 +200,38 @@ public class SignupActivity extends Activity {
 					openApp(intent);
 				}								
 			}
-		});			
+		});
+		
+		availableOffices.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				companyDomain.setText("@" + companyToDomainMap.get(companies.get(position)));
+				findCompanyOffices(companyToIdMap.get(companies.get(position)));
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}					
+		});
+		
+		companyLocationDropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+				selectedCompanyOffice = companyOfficeToIdLocationMap.get(companyOffices.get(position));
+				Toast.makeText(applicationContext, "The co-od for this is " + companyOfficeToGPSLocationMap.get(companyOffices.get(position)), Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		// for the locations to load up
+		showProgressBar();
+		findAllCompanies();
 	}
 	
 	
@@ -194,13 +246,89 @@ public class SignupActivity extends Activity {
 	}
 	
 	/**
+	 * API to get all the companies
+	 */
+	protected void findAllCompanies() {
+		new AsyncTask<Void, Void, JSONArray>() {								
+            @Override
+            protected JSONArray doInBackground(Void... params) {
+            	return locationService.findAllCompanies();            	
+            }
+ 
+            @Override
+            protected void onPostExecute(JSONArray responseArray) {
+            	hideProgressBar();            	
+				try {
+					for(int i=0; i<responseArray.length(); i++) {
+						JSONObject companyObj = ((JSONObject)responseArray.get(i));
+						String companyName = companyObj.getString("company_name");
+						String companyId = String.valueOf(companyObj.getInt("id"));
+						String domainName = companyObj.getString("email_domain");
+						companies.add(companyName);
+						companyToIdMap.put(companyName, companyId);
+						companyToDomainMap.put(companyName, domainName);
+					}					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+            	            					
+				ArrayAdapter<CharSequence> adapter = new ArrayAdapter(SignupActivity.this, R.layout.multi_line, companies);
+				availableOffices.setAdapter(adapter);
+				
+            }
+        }.execute(null, null, null);
+	}
+	
+	/**
+	 * API to get company offices corresponding to company
+	 */
+	protected void findCompanyOffices(final String selectedCompany) {
+		new AsyncTask<Void, Void, JSONArray>() {								
+            @Override
+            protected JSONArray doInBackground(Void... params) {
+            	return locationService.findCompanyOffices(selectedCompany);            	
+            }
+ 
+            @Override
+            protected void onPostExecute(JSONArray responseArray) {
+            	hideProgressBar();
+            	companyOffices.clear();
+				try {
+					for(int i=0; i<responseArray.length(); i++) {
+						JSONObject companyObj = ((JSONObject)responseArray.get(i));
+						String officeName = companyObj.getString("office_name");
+						String addressText = companyObj.getString("address_text");
+						String addressLatLon = companyObj.getString("address_lat_lon");
+						String officeId = String.valueOf(companyObj.getInt("id"));
+						companyOffices.add(officeName + " | " + addressText);
+						String[] addressLoc = addressLatLon.split(",");
+						
+						Double latitude = Double.parseDouble(addressLoc[0]);
+						Double longitude = Double.parseDouble(addressLoc[1]);
+						
+						companyOfficeToGPSLocationMap.put(officeName + " | " + addressText, new GpsLocation(latitude, longitude));
+						companyOfficeToIdLocationMap.put(officeName + " | " + addressText, officeId);
+					}					
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+            	            					
+				ArrayAdapter<CharSequence> adapter = new ArrayAdapter(SignupActivity.this, R.layout.multi_line, companyOffices);
+				companyLocationDropdown.setAdapter(adapter);
+				
+            }
+        }.execute(null, null, null);
+	}
+	
+	
+	/**
 	 * API to register/sign-up the new user.
 	 */
 	protected void registerUser() {
 		new AsyncTask<Void, Void, JSONObject>() {								
             @Override
             protected JSONObject doInBackground(Void... params) {
-            	return userService.addUser("1", selectedGender, phoneNumber.getText().toString(), name.getText().toString(), email.getText().toString()+"@flipkart.com", UNVERIFIED);            	
+            	return userService.addUser(selectedCompanyOffice, selectedGender, phoneNumber.getText().toString(), name.getText().toString(), email.getText().toString() + companyDomain.getText(), UNVERIFIED);            	
             }
  
             @Override

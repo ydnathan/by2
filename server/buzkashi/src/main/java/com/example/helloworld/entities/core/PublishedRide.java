@@ -65,10 +65,10 @@ public class PublishedRide {
     @Column(name="updated_at")
     @JsonProperty("updated_at")
     private Timestamp updatedAt;
-        
+
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(nullable = false)
-    private Company company;
+    private CompanyOffice companyOffice;
 
 //    @OneToMany(mappedBy = "ride", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 //    @Column(nullable = true)
@@ -78,7 +78,7 @@ public class PublishedRide {
     @JsonCreator
     public PublishedRide(@JsonProperty("user") User user, @JsonProperty("route") Route route, @JsonProperty("leaving_at") Date leavingAt, 
     		//@JsonProperty("status") RideStatus status, 
-    		@JsonProperty("source") Company company) {
+    		@JsonProperty("source") CompanyOffice companyOffice) {
         this.user = user;
         this.route = route;
         this.leavingAt = new Timestamp(leavingAt.getTime());
@@ -86,16 +86,16 @@ public class PublishedRide {
         this.available = true;
         this.createdAt = new Timestamp(Calendar.getInstance().getTime().getTime());
         this.updatedAt = new Timestamp(Calendar.getInstance().getTime().getTime());
-        this.company = company;
+        this.companyOffice = companyOffice;
     }
 
-    public Company getCompany() {
-		return company;
-	}
+    public CompanyOffice getCompanyOffice() {
+        return companyOffice;
+    }
 
-	public void setCompany(Company company) {
-		this.company = company;
-	}
+    public void setCompanyOffice(CompanyOffice companyOffice) {
+        this.companyOffice = companyOffice;
+    }
 
 	public long getId() {
         return id;

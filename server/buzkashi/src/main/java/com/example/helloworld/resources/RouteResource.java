@@ -60,30 +60,30 @@ public class RouteResource {
 //        return dao.searchRoute(destination_id.get());
 //  }
 
-    @POST
-    @Timed
-    @Path("add")
-    @UnitOfWork
-    public Long addRoute(@FormParam("user_id") Optional<Long> userId, @FormParam("company_id") Optional<Long> companyId, @FormParam("destination_ids") Optional<String> destinationIdStr) {
-        User createdBy = userDAO.findById(userId.get());
-        Company company = companyDAO.findById(companyId.get());
-        String companyAddressCode = company.getAddressCode();
-        String[] destinationIds = destinationIdStr.get().split("\\s*,\\s*");
-        List<Long> destinationIdList = new ArrayList<Long>();
-        for(String destinationId : destinationIds) {
-            destinationIdList.add(Long.parseLong(destinationId));
-        }
-        List<Destination> destinationList = destinationDAO.findById(destinationIdList);
-        String routeName = companyAddressCode.concat("_").concat(Iterables.getLast(destinationList).getAreaCode());
-        Route route = routeDAO.create(new Route(routeName, createdBy));
-
-        int sequence = 0;
-        for(Destination destination : destinationList) {
-            routeDestinationMapDAO.create(new RouteDestinationMap(route, destination, sequence));
-            sequence++;
-        }
-
-        return route.getId();
-    }
+//    @POST
+//    @Timed
+//    @Path("add")
+//    @UnitOfWork
+//    public Long addRoute(@FormParam("user_id") Optional<Long> userId, @FormParam("company_id") Optional<Long> companyId, @FormParam("destination_ids") Optional<String> destinationIdStr) {
+//        User createdBy = userDAO.findById(userId.get());
+//        Company company = companyDAO.findById(companyId.get());
+//        String companyAddressCode = company.getAddressCode();
+//        String[] destinationIds = destinationIdStr.get().split("\\s*,\\s*");
+//        List<Long> destinationIdList = new ArrayList<Long>();
+//        for(String destinationId : destinationIds) {
+//            destinationIdList.add(Long.parseLong(destinationId));
+//        }
+//        List<Destination> destinationList = destinationDAO.findById(destinationIdList);
+//        String routeName = companyAddressCode.concat("_").concat(Iterables.getLast(destinationList).getAreaCode());
+//        Route route = routeDAO.create(new Route(routeName, createdBy));
+//
+//        int sequence = 0;
+//        for(Destination destination : destinationList) {
+//            routeDestinationMapDAO.create(new RouteDestinationMap(route, destination, sequence));
+//            sequence++;
+//        }
+//
+//        return route.getId();
+//    }
 
 }

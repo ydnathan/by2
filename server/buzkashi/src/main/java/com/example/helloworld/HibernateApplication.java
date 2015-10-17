@@ -22,7 +22,7 @@ public class HibernateApplication extends Application<HibernateConfiguration> {
         new HibernateApplication().run(args);
     }
 
-    private final HibernateBundle<HibernateConfiguration> hibernate = new HibernateBundle<HibernateConfiguration>(Person.class, Company.class, Destination.class, Request.class, Ride.class, Route.class, RouteDestinationMap.class, User.class) {
+    private final HibernateBundle<HibernateConfiguration> hibernate = new HibernateBundle<HibernateConfiguration>(Person.class, Company.class, CompanyOffice.class, Destination.class, Request.class, Ride.class, Route.class, RouteDestinationMap.class, User.class) {
         public DataSourceFactory getDataSourceFactory(HibernateConfiguration configuration) {
             return configuration.getDataSourceFactory();
         }
@@ -40,14 +40,16 @@ public class HibernateApplication extends Application<HibernateConfiguration> {
         final RequestDAO requestDAO = new RequestDAO(sessionFactory);
         final RouteDestinationMapDAO routeDestinationMapDAO = new RouteDestinationMapDAO(sessionFactory);
         final PublishedRideDAO publishedRideDAO = new PublishedRideDAO(sessionFactory);
+        final CompanyOfficeDAO companyOfficeDAO = new CompanyOfficeDAO(sessionFactory);
 
         environment.jersey().register(new DestinationResource(destinationDAO));
         environment.jersey().register(new CompanyResource(companyDAO));
-        environment.jersey().register(new UserResource(userDAO, companyDAO, destinationDAO, routeDAO, rideDAO,publishedRideDAO, routeDestinationMapDAO, requestDAO));
+        environment.jersey().register(new UserResource(userDAO, companyOfficeDAO, destinationDAO, routeDAO, rideDAO,publishedRideDAO, routeDestinationMapDAO, requestDAO));
         environment.jersey().register(new RouteResource(routeDAO, userDAO, companyDAO, destinationDAO, routeDestinationMapDAO));
-        environment.jersey().register(new RideResource(rideDAO, userDAO, requestDAO, destinationDAO,companyDAO,routeDAO,routeDestinationMapDAO,publishedRideDAO));
-        environment.jersey().register(new RequestResource(userDAO, companyDAO, destinationDAO, routeDAO,requestDAO));
+        environment.jersey().register(new RideResource(rideDAO, userDAO, requestDAO, destinationDAO,companyOfficeDAO,routeDAO,routeDestinationMapDAO,publishedRideDAO));
+        environment.jersey().register(new RequestResource(userDAO, companyOfficeDAO, destinationDAO, routeDAO,requestDAO));
         environment.jersey().register(new PersonResource(new PersonDAO(sessionFactory)));
+        environment.jersey().register(new CompanyOfficeResource(companyOfficeDAO, companyDAO));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.helloworld.dao;
 
+import com.example.helloworld.entities.core.*;
 import io.dropwizard.hibernate.AbstractDAO;
 
 import java.util.List;
@@ -7,12 +8,6 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-
-import com.example.helloworld.entities.core.Company;
-import com.example.helloworld.entities.core.Destination;
-import com.example.helloworld.entities.core.Request;
-import com.example.helloworld.entities.core.Ride;
-import com.example.helloworld.entities.core.User;
 
 /**
  * Created by vaidyanathan.s on 10/05/15.
@@ -54,7 +49,7 @@ public class RequestDAO extends AbstractDAO<Request> {
 		return currentSession().createCriteria(Request.class).add(Restrictions.eq("destination", destination)).list();
 	}
 
-	public List<Request> findRequestsByDestinationIdAndSourceId(Destination destination, Company source) {
+	public List<Request> findRequestsByDestinationIdAndSourceId(Destination destination, CompanyOffice source) {
 		//System.out.println("destination id being received =" +destination);
 		return currentSession().createCriteria(Request.class).add(Restrictions.eq("destination", destination)).add(Restrictions.eq("source", source)).list();
 	}

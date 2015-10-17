@@ -39,7 +39,7 @@ public class UserService {
 		
 		try {
 			List<BasicNameValuePair> nameValuePairs = new ArrayList<BasicNameValuePair>();
-			nameValuePairs.add(new BasicNameValuePair("company_id", "1"));
+			nameValuePairs.add(new BasicNameValuePair("company_office_id", "1"));
 			nameValuePairs.add(new BasicNameValuePair("gender", gender));
 			nameValuePairs.add(new BasicNameValuePair("contact_number", contactNumber));
 			nameValuePairs.add(new BasicNameValuePair("name", name));

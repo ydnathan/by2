@@ -1,5 +1,7 @@
 package com.example.helloworld.resources;
 
+import com.example.helloworld.dao.*;
+import com.example.helloworld.entities.core.*;
 import io.dropwizard.hibernate.UnitOfWork;
 
 import java.util.List;
@@ -16,15 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.codahale.metrics.annotation.Timed;
-import com.example.helloworld.dao.CompanyDAO;
-import com.example.helloworld.dao.DestinationDAO;
-import com.example.helloworld.dao.RequestDAO;
-import com.example.helloworld.dao.RouteDAO;
-import com.example.helloworld.dao.UserDAO;
-import com.example.helloworld.entities.core.Company;
-import com.example.helloworld.entities.core.Destination;
-import com.example.helloworld.entities.core.Request;
-import com.example.helloworld.entities.core.User;
 import com.google.common.base.Optional;
 
 /**
@@ -34,15 +27,15 @@ import com.google.common.base.Optional;
 @Produces(MediaType.APPLICATION_JSON)
 public class RequestResource {
     private UserDAO userDAO;
-    private CompanyDAO companyDAO;
+    private CompanyOfficeDAO companyOfficeDAO;
     private DestinationDAO destinationDAO;
     private RouteDAO routeDAO;
     private RequestDAO requestDAO;
 
     final static Logger logger = LoggerFactory.getLogger(UserResource.class);
 
-    public RequestResource(UserDAO userDAO, CompanyDAO companyDAO, DestinationDAO destinationDAO, RouteDAO routeDAO,RequestDAO requestDAO) {
-        this.companyDAO = companyDAO;
+    public RequestResource(UserDAO userDAO, CompanyOfficeDAO companyOfficeDAO, DestinationDAO destinationDAO, RouteDAO routeDAO,RequestDAO requestDAO) {
+        this.companyOfficeDAO = companyOfficeDAO;
         this.userDAO = userDAO;
         this.destinationDAO = destinationDAO;
         this.routeDAO = routeDAO;
@@ -53,11 +46,11 @@ public class RequestResource {
     @Timed
     @Path("create")
     @UnitOfWork
-    public Request createRequest(@FormParam("company_id") Optional<Long> companyId,
+    public Request createRequest(@FormParam("company_office_id") Optional<Long> companyOfficeId,
                                                  @FormParam("destination_id") Optional<Long> destinationId,
                                                  @FormParam("user_id") Optional<Long> userId
                                                  ) {
-        Company source = companyDAO.findById(companyId.get());
+        CompanyOffice source = companyOfficeDAO.findById(companyOfficeId.get());
         User user = userDAO.findById(userId.get());
         Destination destination = destinationDAO.findById(destinationId.get());
         return requestDAO.create(new Request(user, source, destination));
@@ -83,7 +76,7 @@ public class RequestResource {
     public List<Request> findRequest(@QueryParam("destination_id") Optional<Long> destinationId,
     		@QueryParam("source_id") Optional<Long> sourceId) {
         Destination destination = destinationDAO.findById(destinationId.get());
-        Company source = companyDAO.findById(sourceId.get());
+        CompanyOffice source = companyOfficeDAO.findById(sourceId.get());
     	return requestDAO.findRequestsByDestinationIdAndSourceId(destination, source);
 
     }

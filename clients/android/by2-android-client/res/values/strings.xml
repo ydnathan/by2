@@ -25,7 +25,7 @@
     
     <!-- Server | ec2-52-24-52-86.us-west-2.compute.amazonaws.com:8080 | local -->
     
-    <string name="server_base_url">http://192.168.0.102:8080</string>
+    <string name="server_base_url">http://172.20.164.248:8080</string>
         
     <string name="successfully_registered_msg">An email has been sent with the activation code to the provided email address</string>
     <string name="successfully_registered_gcm_msg">Registered with GCM Server successfully</string>

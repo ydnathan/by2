@@ -57,7 +57,7 @@ import com.example.helloworld.entities.core.User;
 @Produces(MediaType.APPLICATION_JSON)
 public class UserResource {
     private UserDAO userDAO;
-    private CompanyDAO companyDAO;
+    private CompanyOfficeDAO companyOfficeDAO;
     private DestinationDAO destinationDAO;
     private RouteDAO routeDAO;
     private RouteDestinationMapDAO routeDestinationMapDAO;
@@ -67,9 +67,9 @@ public class UserResource {
 
     final static Logger logger = LoggerFactory.getLogger(UserResource.class);
 
-    public UserResource(UserDAO userDAO, CompanyDAO companyDAO, DestinationDAO destinationDAO, RouteDAO routeDAO, 
+    public UserResource(UserDAO userDAO, CompanyOfficeDAO companyOfficeDAO, DestinationDAO destinationDAO, RouteDAO routeDAO,
     		RideDAO rideDAO, PublishedRideDAO publishedRideDAO, RouteDestinationMapDAO routeDestinationMapDAO, RequestDAO requestDAO) {
-        this.companyDAO = companyDAO;
+        this.companyOfficeDAO = companyOfficeDAO;
         this.userDAO = userDAO;
         this.destinationDAO = destinationDAO;
         this.routeDAO = routeDAO;
@@ -84,7 +84,7 @@ public class UserResource {
     @Path("add")
     @UnitOfWork
     //@Consumes(MediaType.MULTIPART_FORM_DATA)
-    public AddUserResponse addUser(@FormParam("company_id") Optional<Long> companyId,
+    public AddUserResponse addUser(@FormParam("company_office_id") Optional<Long> companyOfficeId,
                               @FormParam("name") Optional<String> name,
                               @FormParam("gender") Optional<String> gender,
                               @FormParam("company_email") Optional<String> companyEmail,
@@ -93,10 +93,10 @@ public class UserResource {
     ) throws IOException {
         //String filePath = "~/images/" + contentDispositionHeader.getFileName();
         //saveFile(fileInputStream, filePath);
-        Company company = companyDAO.findById(companyId.get());
+        CompanyOffice companyOffice = companyOfficeDAO.findById(companyOfficeId.get());
         //String profileImageURL = AWSResource.uploadFile(contentDispositionHeader.getFileName(), filePath);
         String profileImageURL = "https://s3-ap-southeast-1.amazonaws.com/buzkashi/images/profile1.jpeg";
-        Long userID = userDAO.create(new User(company, name.get(), gender.get(), companyEmail.get(), contactNumber.get(), profileImageURL));
+        Long userID = userDAO.create(new User(companyOffice, name.get(), gender.get(), companyEmail.get(), contactNumber.get(), profileImageURL));
         String emailToken = sendVerMail(name.get(), companyEmail.get());
         User user = userDAO.findById(userID);
         userDAO.updateEmailToken(user, emailToken);
@@ -249,7 +249,7 @@ public class UserResource {
     	List<RouteDestinationMap> destinationMaps = routeDestinationMapDAO.findAllDestinationMapsByRouteId(routeId);
     	for(RouteDestinationMap map : destinationMaps){
     		Destination destination = destinationDAO.findById(map.getDestination_id());
-    		Company source = companyDAO.findById(sourceId);
+    		CompanyOffice source = companyOfficeDAO.findById(sourceId);
     		requests.addAll(requestDAO.findRequestsByDestinationIdAndSourceId(destination,source));
     	}
     	return requests;

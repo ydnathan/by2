@@ -31,67 +31,24 @@ public class Company {
     private String companyName;
 
     @NotEmpty
-    @Column(name="address_code")
-    @JsonProperty("address_code")
-    private String addressCode;
-
-    @NotEmpty
     @Column(name="email_domain")
     @JsonProperty("email_domain")
     private String emailDomain;
 
-    @NotEmpty
-    @Column(name="address_text")
-    @JsonProperty("address_text")
-    private String addressText;
-
-    @NotEmpty
-    @Column(name="address_lat_lon")
-    @JsonProperty("address_lat_lon")
-    private String addressLatLon;
-
-    @NotEmpty
-    @Column(name="city")
-    @JsonProperty("city")
-    private String city;
-
-    @NotEmpty
-    @Column(name="state")
-    @JsonProperty("state")
-    private String state;
-
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @Column(nullable = true)
     @JsonBackReference
-    private Set<User> users;
+    private Set<CompanyOffice> companyOffices;
 
     @JsonCreator
     public Company(@JsonProperty("company_name") String companyName,
-                   @JsonProperty("address_code") String addressCode,
-                   @JsonProperty("email_domain") String emailDomain,
-                   @JsonProperty("address_text") String addressText,
-                   @JsonProperty("address_lat_lon") String addressLatLon,
-                   @JsonProperty("city") String city,
-                   @JsonProperty("state") String state) {
+                   @JsonProperty("email_domain") String emailDomain) {
         this.companyName = companyName;
-        this.addressCode = addressCode;
         this.emailDomain = emailDomain;
-        this.addressText = addressText;
-        this.addressLatLon = addressLatLon;
-        this.city = city;
-        this.state = state;
     }
 
     public long getId() {
         return id;
-    }
-
-    public String getAddressCode() {
-        return addressCode;
-    }
-
-    public void setAddressCode(String addressCode) {
-        this.addressCode = addressCode;
     }
 
     public String getEmailDomain() {
@@ -102,51 +59,19 @@ public class Company {
         this.emailDomain = emailDomain;
     }
 
-    public String getAddressText() {
-        return addressText;
-    }
-
-    public void setAddressText(String addressText) {
-        this.addressText = addressText;
-    }
-
-    public String getAddressLatLon() {
-        return addressLatLon;
-    }
-
-    public void setAddressLatLon(String addressLatLon) {
-        this.addressLatLon = addressLatLon;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
-
     public String getCompanyName() {
         return companyName;
     }
 
     public void setCompanyName(String companyName) {
         this.companyName = companyName;
+    }
+
+    public Set<CompanyOffice> getCompanyOffices() {
+        return companyOffices;
+    }
+
+    public void setCompanyOffices(Set<CompanyOffice> companyOffices) {
+        this.companyOffices = companyOffices;
     }
 }

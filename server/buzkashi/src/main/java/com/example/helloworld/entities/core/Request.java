@@ -18,7 +18,7 @@ import java.util.List;
 
 @Entity
 @Table(name="Request")
-public class Request {
+public class Request extends BaseEntity {
     public Request() {
         // Jackson deserialization
     }
@@ -35,7 +35,7 @@ public class Request {
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Company source;
+    private CompanyOffice source;
 
     @JsonManagedReference
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -50,25 +50,17 @@ public class Request {
     @Enumerated(EnumType.ORDINAL)
     private RequestStatus status;
 
-    @Column(name="request_created_at")
-    @JsonProperty("request_created_at")
-    private Timestamp requestCreatedAt;
-
-    @Column(name="request_updated_at")
-    @JsonProperty("request_updated_at")
-    private Timestamp requestUpdatedAt;
 
 //user_id, request_created_at, status (cancelled, confirmed, pending, expired, deleted), acked_giver, source_id, destination_ids(CSV)
     @JsonCreator
     public Request(@JsonProperty("user") User user,
-                @JsonProperty("source") Company company,
+                @JsonProperty("source") CompanyOffice companyOffice,
                 @JsonProperty("destination") Destination destination
     ) {
+        super();
         this.user = user;
-        this.source = company;
+        this.source = companyOffice;
         this.destination = destination;
-        this.requestCreatedAt = new Timestamp(Calendar.getInstance().getTime().getTime());
-        this.requestUpdatedAt = new Timestamp(Calendar.getInstance().getTime().getTime());
         this.status = RequestStatus.REQUESTED;
     }
 
@@ -108,21 +100,8 @@ public class Request {
         this.destination = destination;
     }
 
-    public Company getSource() { return source; }
+    public CompanyOffice getSource() { return source; }
 
-    public void setSource(Company source) { this.source = source; }
+    public void setSource(CompanyOffice source) { this.source = source; }
 
-    public Timestamp getRequestCreatedAt() {
-        return requestCreatedAt;
-    }
-
-    public void setRequestCreatedAt(Timestamp requestCreatedAt) {
-        this.requestCreatedAt = requestCreatedAt;
-    }
-
-    public Timestamp getRequestUpdatedAt() { return requestUpdatedAt; }
-
-    public void setRequestUpdatedAt(Timestamp requestUpdatedAt) {
-        this.requestUpdatedAt = requestUpdatedAt;
-    }
 }
