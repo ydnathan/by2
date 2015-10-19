@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -47,6 +48,7 @@ public class MainActivity extends Activity implements
 	 */
 	private CharSequence mTitle;
 	private SharedPreferencesDB db;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -245,63 +247,71 @@ public class MainActivity extends Activity implements
 							android.R.layout.simple_spinner_item);
 			adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 			locations.setAdapter(adapter2);
-
-			Spinner via1 = (Spinner) rootView.findViewById(R.id.via_1);
-			ArrayAdapter<CharSequence> adapter3 = ArrayAdapter
-					.createFromResource(this.getActivity(),
-							R.array.to_locations,
-							android.R.layout.simple_spinner_item);
-			adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			via1.setAdapter(adapter3);
-
-			Spinner via2 = (Spinner) rootView.findViewById(R.id.via_2);
-			ArrayAdapter<CharSequence> adapter4 = ArrayAdapter
-					.createFromResource(this.getActivity(),
-							R.array.to_locations,
-							android.R.layout.simple_spinner_item);
-			adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			via2.setAdapter(adapter4);
-
-			Spinner via3 = (Spinner) rootView.findViewById(R.id.via_3);
-			ArrayAdapter<CharSequence> adapter5 = ArrayAdapter
-					.createFromResource(this.getActivity(),
-							R.array.to_locations,
-							android.R.layout.simple_spinner_item);
-			adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			via3.setAdapter(adapter5);
-
-			Spinner via4 = (Spinner) rootView.findViewById(R.id.via_4);
-			ArrayAdapter<CharSequence> adapter6 = ArrayAdapter
-					.createFromResource(this.getActivity(),
-							R.array.to_locations,
-							android.R.layout.simple_spinner_item);
-			adapter6.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			via4.setAdapter(adapter6);
-
-			Spinner via5 = (Spinner) rootView.findViewById(R.id.via_5);
-			ArrayAdapter<CharSequence> adapter7 = ArrayAdapter
-					.createFromResource(this.getActivity(),
-							R.array.to_locations,
-							android.R.layout.simple_spinner_item);
-			adapter7.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			via5.setAdapter(adapter7);
-
-			((Button) rootView.findViewById(R.id.add_more_via))
-					.setOnClickListener(new View.OnClickListener() {
-
-						@Override
-						public void onClick(View v) {
-							Spinner via4 = (Spinner) rootView
-									.findViewById(R.id.via_4);
-							if (via4.getVisibility() == View.GONE) {
-								via4.setVisibility(View.VISIBLE);
-							} else {
-								Spinner via5 = (Spinner) rootView
-										.findViewById(R.id.via_5);
-								via5.setVisibility(View.VISIBLE);
-							}
-						}
-					});
+			Button selectDestination = (Button) rootView.findViewById(R.id.selectDestination);
+			selectDestination.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					openSelectDestinationView();
+				}
+			});
+			
+//			Spinner via1 = (Spinner) rootView.findViewById(R.id.via_1);
+//			ArrayAdapter<CharSequence> adapter3 = ArrayAdapter
+//					.createFromResource(this.getActivity(),
+//							R.array.to_locations,
+//							android.R.layout.simple_spinner_item);
+//			adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//			via1.setAdapter(adapter3);
+//
+//			Spinner via2 = (Spinner) rootView.findViewById(R.id.via_2);
+//			ArrayAdapter<CharSequence> adapter4 = ArrayAdapter
+//					.createFromResource(this.getActivity(),
+//							R.array.to_locations,
+//							android.R.layout.simple_spinner_item);
+//			adapter4.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//			via2.setAdapter(adapter4);
+//
+//			Spinner via3 = (Spinner) rootView.findViewById(R.id.via_3);
+//			ArrayAdapter<CharSequence> adapter5 = ArrayAdapter
+//					.createFromResource(this.getActivity(),
+//							R.array.to_locations,
+//							android.R.layout.simple_spinner_item);
+//			adapter5.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//			via3.setAdapter(adapter5);
+//
+//			Spinner via4 = (Spinner) rootView.findViewById(R.id.via_4);
+//			ArrayAdapter<CharSequence> adapter6 = ArrayAdapter
+//					.createFromResource(this.getActivity(),
+//							R.array.to_locations,
+//							android.R.layout.simple_spinner_item);
+//			adapter6.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//			via4.setAdapter(adapter6);
+//
+//			Spinner via5 = (Spinner) rootView.findViewById(R.id.via_5);
+//			ArrayAdapter<CharSequence> adapter7 = ArrayAdapter
+//					.createFromResource(this.getActivity(),
+//							R.array.to_locations,
+//							android.R.layout.simple_spinner_item);
+//			adapter7.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//			via5.setAdapter(adapter7);
+//
+//			((Button) rootView.findViewById(R.id.add_more_via))
+//					.setOnClickListener(new View.OnClickListener() {
+//
+//						@Override
+//						public void onClick(View v) {
+//							Spinner via4 = (Spinner) rootView
+//									.findViewById(R.id.via_4);
+//							if (via4.getVisibility() == View.GONE) {
+//								via4.setVisibility(View.VISIBLE);
+//							} else {
+//								Spinner via5 = (Spinner) rootView
+//										.findViewById(R.id.via_5);
+//								via5.setVisibility(View.VISIBLE);
+//							}
+//						}
+//					});
 
 			final View updateView = rootView.findViewById(R.id.update_pane);
 			((Button) rootView.findViewById(R.id.create_my_ride))
@@ -316,6 +326,11 @@ public class MainActivity extends Activity implements
 						}
 					});
 			return rootView;
+		}
+
+		protected void openSelectDestinationView() {			
+			Intent intent = new Intent(getActivity(), SelectDestinationActivity.class);
+			getActivity().startActivity(intent);
 		}
 
 		@Override

@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">Buzkashi</string>
     <string name="title_section1">Request a ride</string>
     <string name="title_section2">Give a ride</string>
     <string name="title_section3">My Rides</string>
-    <string name="title_section4">My Requests</string>    
+    <string name="title_section4">My Requests</string>
     <string name="title_section5">Redeem / Donate</string>
     <string name="title_section6">About</string>
     <string name="title_section7">Log Out</string>
-    
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">350 points</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_signup">Buzkashi</string>
     <string name="hello_world">Hello world!</string>
-    
     <string name="welcome_txt">GCM App</string>
     <string name="email">Email Address</string>
     <string name="login">Register Me</string>
@@ -23,11 +22,10 @@
     <string name="msg_title">Message</string>
     <string name="user_title">Hello User</string>
     <string name="sign_up_text">Sign up !</string>
-    
+
     <!-- Server | ec2-52-24-52-86.us-west-2.compute.amazonaws.com:8080 | local -->
-    
-    <string name="server_base_url">http://192.168.0.101:8080</string>
-        
+
+    <string name="server_base_url">http://192.168.0.102:8080</string>
     <string name="successfully_registered_msg">An email has been sent with the activation code to the provided email address</string>
     <string name="successfully_registered_gcm_msg">Registered with GCM Server successfully</string>
     <string name="successfully_stored_gcm_msg">Reg Id shared successfully with Web App </string>
@@ -37,6 +35,8 @@
     <string name="gcm_500">Server threw up.</string>
     <string name="gcm_other_errors">Unexpected Error occcured! [Most common Error: Device might not be connected to Internet or remote server is not up and running], check for other errors as well</string>
     <string name="validation_fail_email">Please enter valid email</string>
-    <string name="image_load_error">Could not load image</string>    
+    <string name="image_load_error">Could not load image</string>
     <string name="waiting_msg">Connecting ..</string>
+    <string name="title_activity_select_destination">SelectDestinationActivity</string>
+
 </resources>

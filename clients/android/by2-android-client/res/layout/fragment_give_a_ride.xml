@@ -202,32 +202,17 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@id/SplitLine_hor3" />
-
-            <!--
-             <TextView
-            android:id="@+id/label_5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="6dp"
-            android:layout_marginTop="6dp"
-            android:text="LEAVING FROM "
-            android:textStyle="bold" />
-            -->
-
-
-            <!--
-             <View
-            android:id="@+id/SplitLine_hor5"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/label_5"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/darker_gray" />
-            -->
-
-            <Spinner
+<Button
+    android:id="@+id/selectDestination"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/blue_button"
+    android:minHeight="12dip"
+    android:padding="5dip"
+    android:text="Select Destination"
+    android:textColor="@android:color/white"
+    ></Button>
+       <!-- <Spinner
                 android:id="@+id/via_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -282,38 +267,14 @@
                     android:padding="5dip"
                     android:text="add"
                     android:textColor="@android:color/white" />
-            </LinearLayout>
-
-            <!--
-             <TextView
-            android:id="@+id/label_4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_marginBottom="6dp"
-            android:layout_marginTop="6dp"
-            android:text="DESTINATION"
-            android:textStyle="bold" />
-            -->
-
-
-            <!--
-             <View
-            android:id="@+id/SplitLine_hor4"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/label_4"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:background="@android:color/darker_gray" />
-            -->
+            </LinearLayout> -->
 
             <Spinner
                 android:id="@+id/toLocations"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@id/via_3" />
+                android:layout_below="@id/fromLocations" />
 
             <Button
                 android:id="@+id/create_my_ride"

@@ -114,15 +114,7 @@ public class SignupActivity extends Activity {
 		locationService = new LocationService(this);
 		
 		setTitle(getResources().getText(R.string.sign_up_text));
-		
-		
-		// If verified, go directly
-		if(isVerifiedUser()) {
-			Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-			openApp(intent);
-		}
-		
-		
+
 		// Initializing all the views
 		
 		availableOffices = (Spinner) findViewById(R.id.availableOffices);
@@ -137,17 +129,13 @@ public class SignupActivity extends Activity {
 		uploadSelfieMsg = (TextView) findViewById(R.id.upload_selfie_msg);
 		genderSelector = (RadioGroup) findViewById(R.id.gender);
 		verifyButton = (Button) findViewById(R.id.verify_button);
-		prgDialog = new ProgressDialog(this);
-		
-		// TODO: Populating the companies - should be done from Server call.
+		prgDialog = new ProgressDialog(this);		
 		companyToIdMap = new HashMap<String, String>();
 		companyToDomainMap = new HashMap<String, String>();
 		companyOfficeToGPSLocationMap = new HashMap<String, GpsLocation>();
 		companyOfficeToIdLocationMap = new HashMap<String, String>();
 		companies = new ArrayList<String>();
 		companyOffices = new ArrayList<String>();
-		// TODO: Populate the second drop-down using the data from first dropdown.
-		
 		
 		signup.setOnClickListener(new View.OnClickListener() {			
 			@Override
@@ -223,9 +211,15 @@ public class SignupActivity extends Activity {
 				
 			}
 		});
-		// for the locations to load up
-		showProgressBar();
-		findAllCompanies();
+		
+		// If verified, go directly
+		if(isVerifiedUser()) {
+			Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+			openApp(intent);
+		} else {
+			showProgressBar();
+			findAllCompanies();	
+		}		
 	}
 	
 	
@@ -251,7 +245,7 @@ public class SignupActivity extends Activity {
  
             @Override
             protected void onPostExecute(JSONArray responseArray) {
-            	hideProgressBar();            	
+            	//hideProgressBar();            	
 				try {
 					for(int i=0; i<responseArray.length(); i++) {
 						JSONObject companyObj = ((JSONObject)responseArray.get(i));
@@ -428,10 +422,12 @@ public class SignupActivity extends Activity {
 	    }
 	}
 	
-	protected void showProgressBar() {		
-        prgDialog.setMessage(getResources().getString(R.string.waiting_msg));
-        prgDialog.setCancelable(false);
-        prgDialog.show();
+	protected void showProgressBar() {
+		if(prgDialog!=null) {
+			prgDialog.setMessage(getResources().getString(R.string.waiting_msg));
+	        prgDialog.setCancelable(false);
+	        prgDialog.show();	
+		}        
 	}
 	
 	protected void hideProgressBar() {
@@ -486,24 +482,27 @@ public class SignupActivity extends Activity {
     
     // Share RegID with GCM Server Application on App Server
     private void storeRegIdinServer() {
-        prgDialog.show();
+    	if(prgDialog!=null) {
+    		prgDialog.show();	
+    	}
+        
         params.put(KEY_REG_ID, db.get(KEY_REG_ID));
         
         AsyncHttpClient client = new AsyncHttpClient();
         client.post(ApplicationConstants.APP_SERVER_URL, params, new AsyncHttpResponseHandler() {
             @Override
-            public void onSuccess(String response) {
-                prgDialog.hide();
+            public void onSuccess(String response) {                
                 if (prgDialog != null) {
+                	prgDialog.hide();
                     prgDialog.dismiss();
                 }
                 Toast.makeText(applicationContext, getResources().getString(R.string.successfully_stored_gcm_msg), Toast.LENGTH_LONG).show();
             }
  
 	        @Override
-	        public void onFailure(int statusCode, Throwable error, String content) {
-	            prgDialog.hide();
+	        public void onFailure(int statusCode, Throwable error, String content) {	            
 	            if (prgDialog != null) {
+	            	prgDialog.hide();
 	                prgDialog.dismiss();
 	            }
                         
